@@ -114,8 +114,39 @@ That is, the unit of measure is the syllable as measured on six birds, and the m
 ## Part a
 Using the `pwr` package for \texttt{R} [@pwr], conduct a power analysis. How many observations would the researchers need to detect a moderate-to-large effect ($d=0.65$) when using $\alpha=0.05$ and default power (0.80) for a two-sided one sample $t$ test.
 
+**Solution:**
+
+Installed and loaded the `pwr` library and used the `pwr.t.test` to find that the number of observations needed (n) would be 21.
+
+```{r}
+#| size: scriptsize
+#| include: false
+
+library(pwr) # load package
+
+pwr.t.test(d=0.65, power=0.80, alternative = "two.sided", type="one.sample")
+```
+
 ## Part b
 Click the link to go to the paper. Find the source data for Figure 2. Download the Excel file. Describe what you needed to do to collect the data for Figure 2(g). Note that you only need the `closer_vals` and `further_vals`. Ensure to `mutate()` the data to get a difference (e.g., `closer_vals - further_vals`).
+
+**Solution:**
+
+1. Downloaded the figure 2 excel source data
+2. Copy-pasted the `Closer_vals` and `Further_vals` to a new excel sheet and created column labels for them
+3. Saved the excel sheet as a csv file in my project's root folder
+4. Used `mutate()` to get a new column for difference
+
+```{r}
+#| size: scriptsize
+
+fig.dat<-read_csv("fig2_dat.csv")
+
+fig.dat<-fig.dat |>
+  mutate(Difference= Closer-Further)
+
+head(fig.dat)
+```
 
 ## Part c
 Summarize the data.
