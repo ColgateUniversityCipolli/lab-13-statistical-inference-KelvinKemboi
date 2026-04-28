@@ -162,21 +162,38 @@ Summarize the data.
 #| size: scriptsize
 #| label: Summaries
 
-summary.table<-fig.dat |> 
-  select(Closer, Further, Difference) |> 
+# reshape with pivot_longer
+fig.long<-fig.dat |> 
   pivot_longer(
     cols = everything(), 
     names_to = "Condition", 
-    values_to = "Value") |> 
-  drop_na() |> group_by(Condition) |> 
+    values_to = "Value"
+  ) |> 
+  drop_na()
+
+# numerical summaries
+fig.summary<-fig.long |> 
+  group_by(Condition) |> 
   summarize( 
     Mean = mean(Value), 
     SD = sd(Value), 
     Median = median(Value), 
-    IQR = IQR(Value) 
+    IQR = IQR(Value)
     )
 
-summary.table
+fig.summary
+
+# graphical summary
+fig.plot<-ggplot(fig.long) +
+  geom_histogram(aes(x = Value), bins=8) +
+  facet_wrap(~ Condition, scales = "free") +
+  labs(
+    title = "Distribution of Dopamine Values by Condition",
+    x = "Values",
+    y = "Count"
+  )
+
+fig.plot
 ```
 
 
