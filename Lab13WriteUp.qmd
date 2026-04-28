@@ -140,9 +140,9 @@ Click the link to go to the paper. Find the source data for Figure 2. Download t
 ```{r}
 #| size: scriptsize
 
-fig.dat<-read_csv("fig2_dat.csv")
+fig.dat<- read_csv("fig2_dat.csv")
 
-fig.dat<-fig.dat |>
+fig.dat<- fig.dat |>
   mutate(Difference= Closer-Further)
 
 head(fig.dat)
