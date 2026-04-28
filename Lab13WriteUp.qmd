@@ -188,7 +188,7 @@ fig.plot<-ggplot(fig.long) +
   geom_histogram(aes(x = Value), bins=8) +
   facet_wrap(~ Condition, scales = "free") +
   labs(
-    title = "Distribution of Dopamine Values by Condition",
+    title = "Histograms showing the distribution of Dopamine Values by Condition",
     x = "Values",
     y = "Count"
   )
@@ -207,6 +207,59 @@ Conduct the inferences they do in the paper. Make sure to report the results a l
 **Note**: Use the appropriate one-sided test.
 * "The difference between populations was significant ($p=1.04 \times10^{-8}$).''\
 **Note**: Use the two-sided test.
+
+**Solution:**
+
+used left-tailed test for further, right-tailed test for closer, and two-sided test for difference in the t-tests. I then obtained the t-statistics, p-values, hedge-g effect sizes, and confidence intervals for each.
+
+```{r}
+#| size: scriptsize
+
+library(effectsize)
+
+# t-tests
+closer<-t.test(x=fig.dat$Closer, mu=0, alternative="greater") # increases when singing closer
+
+further<-t.test(x=fig.dat$Further, mu=0, alternative="less") # decreases when singing further
+
+difference<-t.test(x=fig.dat$Difference, mu=0, alternative="two.sided") # differences btw closer and further
+
+n<-25 # number of values for all
+
+# t-statistics for each
+(closer_t.stat<- mean(fig.dat$Closer)/(sd(fig.dat$Closer)/sqrt(n))) # for closer
+
+(further_t.stat<- mean(fig.dat$Further)/ (sd(fig.dat$Further)/sqrt(n))) # for further
+
+(difference_t.stat<- mean(fig.dat$Difference)/(sd(fig.dat$Difference)/sqrt(n))) # for differences
+
+# p-values
+(p.closer<-pt(closer_t.stat, df=n-1, lower.tail = FALSE)) # right tailed for closer
+(p.further<-pt(further_t.stat, df=n-1)) # left tailed for further
+
+#two-sided for difference
+p.low<- pt(difference_t.stat, df = n-1) 
+p.high<- pt(difference_t.stat, df = n-1, lower.tail = FALSE) 
+(p.difference<- 2*min(p.low, p.high))
+
+# hedges-g (for effect sizes)
+(g_closer<-hedges_g(x=fig.dat$Closer, mu= 0)) # for closer
+(g_further<-hedges_g(x=fig.dat$Further, mu= 0)) # for further
+(g_difference<-hedges_g(x=fig.dat$Difference, mu= 0)) # for differences
+
+```
+
+**Results**
+
+The closer responses were significantly greater than 0
+($t=9.157253$, $p<0.0001 (1.33263e-09)$; $g=1.77$; 95% CI: 1.14, 2.39).
+
+The further responses were significantly less than 0
+($t=-7.924497$, $p<0.0001 (1.865612e-08)$; $g=-1.53$; 95% CI: -2.10, -0.95).
+
+The difference between conditions was significant
+($t=9.14276$, $p<0.0001 (2.746058e-09)$; $g=1.77$; 95% CI: 1.14, 2.39).
+
 
 ## Part e 
 
