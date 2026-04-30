@@ -35,20 +35,25 @@ format-links: [pdf]
 
 ```{r}
 #| echo: false
+default_chunk_hook <- knitr::knit_hooks$get("chunk")
 
-default_chunk_hook  <- knitr::knit_hooks$get("chunk")
-
-latex_font_size <- c("Huge", "huge", "LARGE", "Large", 
-                     "large", "normalsize", "small", 
-                     "footnotesize", "scriptsize", "tiny")
+latex_font_size <- c(
+  "Huge",
+  "huge",
+  "LARGE",
+  "Large",
+  "large",
+  "normalsize",
+  "small",
+  "footnotesize",
+  "scriptsize",
+  "tiny"
+)
 
 knitr::knit_hooks$set(chunk = function(x, options) {
   x <- default_chunk_hook(x, options)
-  if(options$size %in% latex_font_size) {
-    paste0("\n \\", options$size, "\n\n", 
-      x, 
-      "\n\n \\normalsize"
-    )
+  if (options$size %in% latex_font_size) {
+    paste0("\n \\", options$size, "\n\n", x, "\n\n \\normalsize")
   } else {
     x
   }
@@ -120,11 +125,14 @@ Installed and loaded the `pwr` library and used the `pwr.t.test` to find that th
 
 ```{r}
 #| size: scriptsize
-#| include: false
-
 library(pwr) # load package
 
-pwr.t.test(d=0.65, power=0.80, alternative = "two.sided", type="one.sample")
+pwr.t.test(
+  d = 0.65,
+  power = 0.80,
+  alternative = "two.sided",
+  type = "one.sample"
+)
 ```
 
 ## Part b
@@ -139,11 +147,10 @@ Click the link to go to the paper. Find the source data for Figure 2. Download t
 
 ```{r}
 #| size: scriptsize
+fig.dat <- read_csv("fig2_dat.csv")
 
-fig.dat<- read_csv("fig2_dat.csv")
-
-fig.dat<- fig.dat |>
-  mutate(Difference= Closer-Further)
+fig.dat <- fig.dat |>
+  mutate(Difference = Closer - Further)
 
 head(fig.dat)
 ```
@@ -161,32 +168,31 @@ Summarize the data.
 ```{r}
 #| size: scriptsize
 #| label: Summaries
-
 # reshape with pivot_longer
-fig.long<-fig.dat |> 
+fig.long <- fig.dat |>
   pivot_longer(
-    cols = everything(), 
-    names_to = "Condition", 
+    cols = everything(),
+    names_to = "Condition",
     values_to = "Value"
-  ) |> 
+  ) |>
   drop_na()
 
 # numerical summaries
-fig.summary<-fig.long |> 
-  group_by(Condition) |> 
-  summarize( 
-    Mean = mean(Value), 
-    SD = sd(Value), 
-    Median = median(Value), 
+fig.summary <- fig.long |>
+  group_by(Condition) |>
+  summarize(
+    Mean = mean(Value),
+    SD = sd(Value),
+    Median = median(Value),
     IQR = IQR(Value)
-    )
+  )
 
 fig.summary
 
 # graphical summary
-fig.plot<-ggplot(fig.long) +
-  geom_histogram(aes(x = Value), bins=8) +
-  facet_wrap(~ Condition, scales = "free") +
+fig.plot <- ggplot(fig.long) +
+  geom_histogram(aes(x = Value), bins = 8) +
+  facet_wrap(~Condition, scales = "free") +
   labs(
     title = "Histograms showing the distribution of Dopamine Values by Condition",
     x = "Values",
@@ -214,39 +220,38 @@ used left-tailed test for further, right-tailed test for closer, and two-sided t
 
 ```{r}
 #| size: scriptsize
-
 library(effectsize)
 
 # t-tests
-closer<-t.test(x=fig.dat$Closer, mu=0, alternative="greater") # increases when singing closer
+closer <- t.test(x = fig.dat$Closer, mu = 0, alternative = "greater") # increases when singing closer
 
-further<-t.test(x=fig.dat$Further, mu=0, alternative="less") # decreases when singing further
+further <- t.test(x = fig.dat$Further, mu = 0, alternative = "less") # decreases when singing further
 
-difference<-t.test(x=fig.dat$Difference, mu=0, alternative="two.sided") # differences btw closer and further
+difference <- t.test(x = fig.dat$Difference, mu = 0, alternative = "two.sided") # differences btw closer and further
 
-n<-25 # number of values for all
+n <- nrow(fig.dat) # number of values for all
 
 # t-statistics for each
-(closer_t.stat<- mean(fig.dat$Closer)/(sd(fig.dat$Closer)/sqrt(n))) # for closer
+(closer_t.stat <- mean(fig.dat$Closer) / (sd(fig.dat$Closer) / sqrt(n))) # for closer
 
-(further_t.stat<- mean(fig.dat$Further)/ (sd(fig.dat$Further)/sqrt(n))) # for further
+(further_t.stat <- mean(fig.dat$Further) / (sd(fig.dat$Further) / sqrt(n))) # for further
 
-(difference_t.stat<- mean(fig.dat$Difference)/(sd(fig.dat$Difference)/sqrt(n))) # for differences
+(difference_t.stat <- mean(fig.dat$Difference) /
+  (sd(fig.dat$Difference) / sqrt(n))) # for differences
 
 # p-values
-(p.closer<-pt(closer_t.stat, df=n-1, lower.tail = FALSE)) # right tailed for closer
-(p.further<-pt(further_t.stat, df=n-1)) # left tailed for further
+(p.closer <- pt(closer_t.stat, df = n - 1, lower.tail = FALSE)) # right tailed for closer
+(p.further <- pt(further_t.stat, df = n - 1)) # left tailed for further
 
 #two-sided for difference
-p.low<- pt(difference_t.stat, df = n-1) 
-p.high<- pt(difference_t.stat, df = n-1, lower.tail = FALSE) 
-(p.difference<- 2*min(p.low, p.high))
+p.low <- pt(difference_t.stat, df = n - 1)
+p.high <- pt(difference_t.stat, df = n - 1, lower.tail = FALSE)
+(p.difference <- 2 * min(p.low, p.high))
 
 # hedges-g (for effect sizes)
-(g_closer<-hedges_g(x=fig.dat$Closer, mu= 0)) # for closer
-(g_further<-hedges_g(x=fig.dat$Further, mu= 0)) # for further
-(g_difference<-hedges_g(x=fig.dat$Difference, mu= 0)) # for differences
-
+(g_closer <- hedges_g(x = fig.dat$Closer, mu = 0)) # for closer
+(g_further <- hedges_g(x = fig.dat$Further, mu = 0)) # for further
+(g_difference <- hedges_g(x = fig.dat$Difference, mu = 0)) # for differences
 ```
 
 **Results**
@@ -269,4 +274,133 @@ to highlight the rejection region and the $p$-value. Additionally, add the
 resampling distribution for $T$ to the chart to demonstrate any differences 
 between the null distribution and the distribution suggested by the data.
 
+**Solution:**
 
+Used a for-loop to run the plotting process for the closer, further, and 
+paired-difference tests by selecting each column, calculating observed t-statistic, 
+and generating the null t-distribution. Used resampling to create a distribution of 
+the t-statistic for each and stored the null distributions, resampling results, and 
+observed statistics in separate tibbles. I then plotted the null distributions,
+ shaded the rejection regions with `geom_ribbon()`, added the resampling distributions
+  with `geom_density()`, and marked the observed t-statistics with dashed vertical lines.
+
+```{r}
+#| label: fig-part-e
+#| echo: false
+#| fig-cap: "Null t-distributions, observed t-statistics, rejection regions, and resampling distributions."
+#| fig-width: 8
+#| fig-height: 5
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+set.seed(123)
+
+# defaults
+alpha <- 0.05
+mu0 <- 0
+
+# variables with categories
+tests <- c("Closer Responses", "Further Responses", "Paired Difference")
+alts <- c("greater", "less", "two.sided")
+
+# tibbles outside loop
+null_all <- tibble()
+resamp_all <- tibble()
+tstat_all <- tibble()
+
+for (i in 1:3) {
+  # number for each section
+  if (i == 1) {
+    x <- fig.dat$Closer
+  } else if (i == 2) {
+    x <- fig.dat$Further
+  } else {
+    x <- fig.dat$Difference
+  }
+  n <- length(x) # size of observations
+  df <- n - 1 # degree of freedom
+  xbar <- mean(x) #mean
+  s <- sd(x) # std
+  t.stat <- (xbar - mu0) / (s / sqrt(n)) #t-stat
+
+  # t_critical values
+  right <- qt(1 - alpha, df)
+  left <- qt(alpha, df)
+  lower <- qt(alpha / 2, df)
+  upper <- qt(1 - alpha / 2, df)
+
+  #x-vals for distribution
+  t_vals <- seq(-12, 12, length.out = 1000)
+  dens <- dt(t_vals, df) #density
+
+  # tibble for all
+  null_df <- tibble(
+    test = tests[i],
+    t = t_vals,
+    density = dens
+  )
+  if (alts[i] == "greater") {
+    null_df <- null_df |> mutate(reject = t >= right) # for right tailed
+  } else if (alts[i] == "less") {
+    null_df <- null_df |> mutate(reject = t <= left) # for left tailed test
+  } else {
+    null_df <- null_df |> mutate(reject = t <= lower | t >= upper) # for two.tailed test
+  }
+
+  # resampling
+  ts <- rep(NA, 1000)
+  for (j in 1:1000) {
+    samp <- sample(x, n, replace = TRUE)
+    ts[j] <- (mean(samp) - mu0) / (sd(samp) / sqrt(n))
+  }
+
+  # join to outside tibbles
+  null_all <- bind_rows(null_all, null_df)
+  resamp_all <- bind_rows(resamp_all, tibble(test = tests[i], t = ts))
+  tstat_all <- bind_rows(tstat_all, tibble(test = tests[i], t_stat = t.stat))
+}
+
+## plotting
+ggplot(null_all, aes(x = t, y = density)) +
+  geom_line(aes(color = "Null Distribution")) + # for null
+  geom_ribbon(
+    # for one-tailed tests
+    data = null_all |> filter(test != "Paired Difference", reject),
+    aes(ymin = 0, ymax = density, fill = "Rejection Region"),
+    alpha = 0.3
+  ) +
+  geom_ribbon(
+    #left-side of two.tailed
+    data = null_all |>
+      filter(test == "Paired Difference", t <= qt(0.025, df = n - 1)),
+    aes(ymin = 0, ymax = density, fill = "Rejection Region"),
+    alpha = 0.3
+  ) +
+  geom_ribbon(
+    # right side of two.tailed
+    data = null_all |>
+      filter(test == "Paired Difference", t >= qt(0.975, df = n - 1)),
+    aes(ymin = 0, ymax = density, fill = "Rejection Region"),
+    alpha = 0.3
+  ) +
+  geom_density(
+    # resampling distrib
+    data = resamp_all,
+    aes(x = t, color = "Resampling Distribution"),
+    inherit.aes = FALSE
+  ) +
+  geom_vline(
+    # for t-statistic
+    data = tstat_all,
+    aes(xintercept = t_stat),
+    linetype = "dashed"
+  ) +
+  facet_wrap(~test, scales = "free_y") +
+  labs(
+    #labels
+    x = "T statistic",
+    y = "Density",
+    color = "",
+    fill = ""
+  )
+```
