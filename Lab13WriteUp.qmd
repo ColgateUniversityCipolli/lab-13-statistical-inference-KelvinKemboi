@@ -314,9 +314,9 @@ tests<- c("Closer Responses", "Further Responses", "Paired Difference")
 alts<- c("greater", "less", "two.sided")
 
 # tibbles outside loop
-null_all<- tibble()
-resamp_all<- tibble()
-tstat_all<- tibble()
+null_all<- tibble() # for null 
+resamp_all<- tibble() # for resamples
+tstat_all<- tibble() # for t-stats
 
 for(i in 1:3){
   # number for each section
@@ -382,14 +382,14 @@ ggplot(null_all, aes(x = t, y = density)) +
   geom_ribbon(
     #left-side of two.tailed
     data = null_all |>
-      filter(test=="Paired Difference", t<= qt(0.025, df = n - 1)),
+      filter(test=="Paired Difference", t<= qt(0.025, df = n-1)),
     aes(ymin = 0, ymax = density, fill = "Rejection Region"),
     alpha = 0.3
   ) +
   geom_ribbon(
     # right side of two.tailed
     data = null_all |>
-      filter(test=="Paired Difference", t>= qt(0.975, df = n - 1)),
+      filter(test=="Paired Difference", t>= qt(0.975, df = n-1)),
     aes(ymin = 0, ymax = density, fill = "Rejection Region"),
     alpha = 0.3
   ) +
@@ -397,6 +397,7 @@ ggplot(null_all, aes(x = t, y = density)) +
     # resampling distrib
     data = resamp_all,
     aes(x = t, color = "Resampling Distribution"),
+    inherit.aes = FALSE
   ) +
   geom_vline(
     # for t-statistic

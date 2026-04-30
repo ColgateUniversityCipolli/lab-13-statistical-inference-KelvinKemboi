@@ -215,9 +215,9 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>fig.dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"fig2_dat.csv"</span>)</span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>fig.dat<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"fig2_dat.csv"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a>fig.dat <span class="ot">&lt;-</span> fig.dat <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>fig.dat<span class="ot">&lt;-</span> fig.dat <span class="sc">|&gt;</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a>  <span class="fu">mutate</span>(<span class="at">Difference =</span> Closer <span class="sc">-</span> Further)</span>
 <span id="cb3-5"><a href="#cb3-5"></a></span>
 <span id="cb3-6"><a href="#cb3-6"></a><span class="fu">head</span>(fig.dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -246,12 +246,18 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 <li><strong>Optional Challenge</strong> Can you reproduce Figure 2(g)? Note that the you can use to plot the range created by adding the mean <span class="math inline">\(\pm\)</span> one standard deviation.</li>
 </ul>
 <p><strong>Solution:</strong></p>
+<p>Created numerical and graphical summaries for further, closer, and paired differences data.</p>
+<ul>
+<li><p>The mean for the further condition is negative (−0.213), suggesting that dopamine levels decreases when the birds sing further away from their adult song</p></li>
+<li><p>The mean for the closer condition is positive (0.179), suggesting that dopamine levels tend increases when the birds sing closer to their adult song</p></li>
+<li><p>The mean for difference is positive (0.391), showing that dopamine levels are generally higher when birds sing closer compared to further away</p></li>
+</ul>
 <p></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># reshape with pivot_longer</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>fig.long <span class="ot">&lt;-</span> fig.dat <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>fig.long<span class="ot">&lt;-</span> fig.dat <span class="sc">|&gt;</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">pivot_longer</span>(</span>
 <span id="cb5-4"><a href="#cb5-4"></a>    <span class="at">cols =</span> <span class="fu">everything</span>(),</span>
 <span id="cb5-5"><a href="#cb5-5"></a>    <span class="at">names_to =</span> <span class="st">"Condition"</span>,</span>
@@ -259,8 +265,8 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 <span id="cb5-7"><a href="#cb5-7"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb5-8"><a href="#cb5-8"></a>  <span class="fu">drop_na</span>()</span>
 <span id="cb5-9"><a href="#cb5-9"></a></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="co"># numerical summaries</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a>fig.summary <span class="ot">&lt;-</span> fig.long <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co"># numerical summary</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>fig.summary<span class="ot">&lt;-</span> fig.long <span class="sc">|&gt;</span></span>
 <span id="cb5-12"><a href="#cb5-12"></a>  <span class="fu">group_by</span>(Condition) <span class="sc">|&gt;</span></span>
 <span id="cb5-13"><a href="#cb5-13"></a>  <span class="fu">summarize</span>(</span>
 <span id="cb5-14"><a href="#cb5-14"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(Value),</span>
@@ -282,7 +288,7 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># graphical summary</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>fig.plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(fig.long) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>fig.plot<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(fig.long) <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> Value), <span class="at">bins =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
 <span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Condition, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5"></a>  <span class="fu">labs</span>(</span>
@@ -321,49 +327,47 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(effectsize)</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(effectsize) <span class="co"># load effect size library</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a></span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="co"># t-tests</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a>closer <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Closer, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">alternative =</span> <span class="st">"greater"</span>) <span class="co"># increases when singing closer</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>closer<span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Closer, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">alternative =</span> <span class="st">"greater"</span>) <span class="co"># increases when singing closer- right tailed</span></span>
 <span id="cb8-5"><a href="#cb8-5"></a></span>
-<span id="cb8-6"><a href="#cb8-6"></a>further <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Further, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">alternative =</span> <span class="st">"less"</span>) <span class="co"># decreases when singing further</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>further<span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Further, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">alternative =</span> <span class="st">"less"</span>) <span class="co"># decreases when singing further- left tailed</span></span>
 <span id="cb8-7"><a href="#cb8-7"></a></span>
-<span id="cb8-8"><a href="#cb8-8"></a>difference <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Difference, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">alternative =</span> <span class="st">"two.sided"</span>) <span class="co"># differences btw closer and further</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a></span>
-<span id="cb8-10"><a href="#cb8-10"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(fig.dat) <span class="co"># number of values for all</span></span>
-<span id="cb8-11"><a href="#cb8-11"></a></span>
-<span id="cb8-12"><a href="#cb8-12"></a><span class="co"># t-statistics for each</span></span>
-<span id="cb8-13"><a href="#cb8-13"></a>(closer_t.stat <span class="ot">&lt;-</span> <span class="fu">mean</span>(fig.dat<span class="sc">$</span>Closer) <span class="sc">/</span> (<span class="fu">sd</span>(fig.dat<span class="sc">$</span>Closer) <span class="sc">/</span> <span class="fu">sqrt</span>(n))) <span class="co"># for closer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-8"><a href="#cb8-8"></a>difference<span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Difference, <span class="at">mu =</span> <span class="dv">0</span>, <span class="at">alternative =</span> <span class="st">"two.sided"</span>) <span class="co"># differences btw closer and further- two sided</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>n<span class="ot">&lt;-</span> <span class="fu">nrow</span>(fig.dat) <span class="co"># number of values</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co"># t-statistics for each</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a>(closer_t.stat<span class="ot">&lt;-</span> <span class="fu">mean</span>(fig.dat<span class="sc">$</span>Closer)<span class="sc">/</span>(<span class="fu">sd</span>(fig.dat<span class="sc">$</span>Closer)<span class="sc">/</span><span class="fu">sqrt</span>(n))) <span class="co">#for closer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9.157253</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>(further_t.stat <span class="ot">&lt;-</span> <span class="fu">mean</span>(fig.dat<span class="sc">$</span>Further) <span class="sc">/</span> (<span class="fu">sd</span>(fig.dat<span class="sc">$</span>Further) <span class="sc">/</span> <span class="fu">sqrt</span>(n))) <span class="co"># for further</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>(further_t.stat<span class="ot">&lt;-</span> <span class="fu">mean</span>(fig.dat<span class="sc">$</span>Further)<span class="sc">/</span>(<span class="fu">sd</span>(fig.dat<span class="sc">$</span>Further)<span class="sc">/</span><span class="fu">sqrt</span>(n))) <span class="co">#for further</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -7.924497</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>(difference_t.stat <span class="ot">&lt;-</span> <span class="fu">mean</span>(fig.dat<span class="sc">$</span>Difference) <span class="sc">/</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a>  (<span class="fu">sd</span>(fig.dat<span class="sc">$</span>Difference) <span class="sc">/</span> <span class="fu">sqrt</span>(n))) <span class="co"># for differences</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>(difference_t.stat<span class="ot">&lt;-</span> <span class="fu">mean</span>(fig.dat<span class="sc">$</span>Difference)<span class="sc">/</span>(<span class="fu">sd</span>(fig.dat<span class="sc">$</span>Difference)<span class="sc">/</span><span class="fu">sqrt</span>(n))) <span class="co">#for differences</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9.14276</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># p-values</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a>(p.closer <span class="ot">&lt;-</span> <span class="fu">pt</span>(closer_t.stat, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)) <span class="co"># right tailed for closer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># p-values for one-sided</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>(p.closer<span class="ot">&lt;-</span> <span class="fu">pt</span>(closer_t.stat, <span class="at">df =</span> n<span class="dv">-1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)) <span class="co"># right tailed for closer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.33263e-09</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>(p.further <span class="ot">&lt;-</span> <span class="fu">pt</span>(further_t.stat, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)) <span class="co"># left tailed for further</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>(p.further<span class="ot">&lt;-</span> <span class="fu">pt</span>(further_t.stat, <span class="at">df =</span> n<span class="dv">-1</span>)) <span class="co"># left tailed for further</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.865612e-08</code></pre>
@@ -371,9 +375,9 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">#two-sided for difference</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>p.low <span class="ot">&lt;-</span> <span class="fu">pt</span>(difference_t.stat, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb18-3"><a href="#cb18-3"></a>p.high <span class="ot">&lt;-</span> <span class="fu">pt</span>(difference_t.stat, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb18-4"><a href="#cb18-4"></a>(p.difference <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">min</span>(p.low, p.high))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-2"><a href="#cb18-2"></a>p.low<span class="ot">&lt;-</span> <span class="fu">pt</span>(difference_t.stat, <span class="at">df =</span> n<span class="dv">-1</span>)</span>
+<span id="cb18-3"><a href="#cb18-3"></a>p.high<span class="ot">&lt;-</span> <span class="fu">pt</span>(difference_t.stat, <span class="at">df =</span> n<span class="dv">-1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-4"><a href="#cb18-4"></a>(p.difference<span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">min</span>(p.low, p.high))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.746058e-09</code></pre>
@@ -381,7 +385,7 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># hedges-g (for effect sizes)</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a>(g_closer <span class="ot">&lt;-</span> <span class="fu">hedges_g</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Closer, <span class="at">mu =</span> <span class="dv">0</span>)) <span class="co"># for closer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-2"><a href="#cb20-2"></a>(g_closer<span class="ot">&lt;-</span> <span class="fu">hedges_g</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Closer, <span class="at">mu =</span> <span class="dv">0</span>)) <span class="co"># for closer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hedges' g |       95% CI
@@ -390,7 +394,7 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>(g_further <span class="ot">&lt;-</span> <span class="fu">hedges_g</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Further, <span class="at">mu =</span> <span class="dv">0</span>)) <span class="co"># for further</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>(g_further<span class="ot">&lt;-</span> <span class="fu">hedges_g</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Further, <span class="at">mu =</span> <span class="dv">0</span>)) <span class="co"># for further</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hedges' g |         95% CI
@@ -399,7 +403,7 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>(g_difference <span class="ot">&lt;-</span> <span class="fu">hedges_g</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Difference, <span class="at">mu =</span> <span class="dv">0</span>)) <span class="co"># for differences</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>(g_difference<span class="ot">&lt;-</span> <span class="fu">hedges_g</span>(<span class="at">x =</span> fig.dat<span class="sc">$</span>Difference, <span class="at">mu =</span> <span class="dv">0</span>)) <span class="co"># for differences</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hedges' g |       95% CI
@@ -409,7 +413,8 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 </div>
 <p></p>
 <p><strong>Results</strong></p>
-<p>The closer responses were significantly greater than 0 (<span class="math inline">\(t=9.157253\)</span>, <span class="math inline">\(p&lt;0.0001 (1.33263e-09)\)</span>; <span class="math inline">\(g=1.77\)</span>; 95% CI: 1.14, 2.39).</p>
+<p>I verified that the observations are independent and that the distributions don’t show very strong skewness or outliers, making the t-procedures appropriate.</p>
+<p>(<span class="math inline">\(t=9.157253\)</span>, <span class="math inline">\(p&lt;0.0001 (1.33263e-09)\)</span>; <span class="math inline">\(g=1.77\)</span>; 95% CI: 1.14, 2.39).</p>
 <p>The further responses were significantly less than 0 (<span class="math inline">\(t=-7.924497\)</span>, <span class="math inline">\(p&lt;0.0001 (1.865612e-08)\)</span>; <span class="math inline">\(g=-1.53\)</span>; 95% CI: -2.10, -0.95).</p>
 <p>The difference between conditions was significant (<span class="math inline">\(t=9.14276\)</span>, <span class="math inline">\(p&lt;0.0001 (2.746058e-09)\)</span>; <span class="math inline">\(g=1.77\)</span>; 95% CI: 1.14, 2.39).</p>
 </section>
@@ -420,6 +425,119 @@ X_{\text{far}} &amp;= \text{average \% change in fluorescence for the bottom 10\
 <p>Used a for-loop to run the plotting process for the closer, further, and paired-difference tests by selecting each column, calculating observed t-statistic, and generating the null t-distribution. Used resampling to create a distribution of the t-statistic for each and stored the null distributions, resampling results, and observed statistics in separate tibbles. I then plotted the null distributions, shaded the rejection regions with <code>geom_ribbon()</code>, added the resampling distributions with <code>geom_density()</code>, and marked the observed t-statistics with dashed vertical lines.</p>
 <p></p>
 <div class="cell" data-layout-align="center" data-scale="80%">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="co"># defaults</span></span>
+<span id="cb26-4"><a href="#cb26-4"></a>alpha<span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a>mu0<span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb26-6"><a href="#cb26-6"></a></span>
+<span id="cb26-7"><a href="#cb26-7"></a><span class="co"># vectors with categories</span></span>
+<span id="cb26-8"><a href="#cb26-8"></a>tests<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Closer Responses"</span>, <span class="st">"Further Responses"</span>, <span class="st">"Paired Difference"</span>)</span>
+<span id="cb26-9"><a href="#cb26-9"></a>alts<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"greater"</span>, <span class="st">"less"</span>, <span class="st">"two.sided"</span>)</span>
+<span id="cb26-10"><a href="#cb26-10"></a></span>
+<span id="cb26-11"><a href="#cb26-11"></a><span class="co"># tibbles outside loop</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a>null_all<span class="ot">&lt;-</span> <span class="fu">tibble</span>() <span class="co"># for null </span></span>
+<span id="cb26-13"><a href="#cb26-13"></a>resamp_all<span class="ot">&lt;-</span> <span class="fu">tibble</span>() <span class="co"># for resamples</span></span>
+<span id="cb26-14"><a href="#cb26-14"></a>tstat_all<span class="ot">&lt;-</span> <span class="fu">tibble</span>() <span class="co"># for t-stats</span></span>
+<span id="cb26-15"><a href="#cb26-15"></a></span>
+<span id="cb26-16"><a href="#cb26-16"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>){</span>
+<span id="cb26-17"><a href="#cb26-17"></a>  <span class="co"># number for each section</span></span>
+<span id="cb26-18"><a href="#cb26-18"></a>  <span class="cf">if</span>(i<span class="sc">==</span><span class="dv">1</span>) {</span>
+<span id="cb26-19"><a href="#cb26-19"></a>    x<span class="ot">&lt;-</span> fig.dat<span class="sc">$</span>Closer</span>
+<span id="cb26-20"><a href="#cb26-20"></a>  } <span class="cf">else</span> <span class="cf">if</span>(i <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb26-21"><a href="#cb26-21"></a>    x<span class="ot">&lt;-</span> fig.dat<span class="sc">$</span>Further</span>
+<span id="cb26-22"><a href="#cb26-22"></a>  } <span class="cf">else</span>{</span>
+<span id="cb26-23"><a href="#cb26-23"></a>    x<span class="ot">&lt;-</span> fig.dat<span class="sc">$</span>Difference</span>
+<span id="cb26-24"><a href="#cb26-24"></a>  }</span>
+<span id="cb26-25"><a href="#cb26-25"></a>  n<span class="ot">&lt;-</span> <span class="fu">length</span>(x) <span class="co"># size of observations</span></span>
+<span id="cb26-26"><a href="#cb26-26"></a>  df<span class="ot">&lt;-</span> n<span class="dv">-1</span> <span class="co"># degrees of freedom</span></span>
+<span id="cb26-27"><a href="#cb26-27"></a>  xbar<span class="ot">&lt;-</span> <span class="fu">mean</span>(x) <span class="co">#mean</span></span>
+<span id="cb26-28"><a href="#cb26-28"></a>  s<span class="ot">&lt;-</span> <span class="fu">sd</span>(x) <span class="co"># std</span></span>
+<span id="cb26-29"><a href="#cb26-29"></a>  t.stat<span class="ot">&lt;-</span> (xbar<span class="sc">-</span>mu0)<span class="sc">/</span>(s<span class="sc">/</span><span class="fu">sqrt</span>(n)) <span class="co">#t-stat</span></span>
+<span id="cb26-30"><a href="#cb26-30"></a></span>
+<span id="cb26-31"><a href="#cb26-31"></a>  <span class="co"># t_critical values</span></span>
+<span id="cb26-32"><a href="#cb26-32"></a>  right<span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span><span class="sc">-</span>alpha, df)</span>
+<span id="cb26-33"><a href="#cb26-33"></a>  left<span class="ot">&lt;-</span> <span class="fu">qt</span>(alpha, df)</span>
+<span id="cb26-34"><a href="#cb26-34"></a>  lower<span class="ot">&lt;-</span> <span class="fu">qt</span>(alpha<span class="sc">/</span><span class="dv">2</span>, df)</span>
+<span id="cb26-35"><a href="#cb26-35"></a>  upper<span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, df)</span>
+<span id="cb26-36"><a href="#cb26-36"></a></span>
+<span id="cb26-37"><a href="#cb26-37"></a>  <span class="co">#x-vals for distribution</span></span>
+<span id="cb26-38"><a href="#cb26-38"></a>  t_vals<span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">12</span>, <span class="dv">12</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
+<span id="cb26-39"><a href="#cb26-39"></a>  dens<span class="ot">&lt;-</span> <span class="fu">dt</span>(t_vals, df) <span class="co">#density</span></span>
+<span id="cb26-40"><a href="#cb26-40"></a></span>
+<span id="cb26-41"><a href="#cb26-41"></a>  <span class="co"># tibble for all</span></span>
+<span id="cb26-42"><a href="#cb26-42"></a>  null_df<span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb26-43"><a href="#cb26-43"></a>    <span class="at">test =</span> tests[i],</span>
+<span id="cb26-44"><a href="#cb26-44"></a>    <span class="at">t =</span> t_vals,</span>
+<span id="cb26-45"><a href="#cb26-45"></a>    <span class="at">density =</span> dens</span>
+<span id="cb26-46"><a href="#cb26-46"></a>  )</span>
+<span id="cb26-47"><a href="#cb26-47"></a>  <span class="cf">if</span>(alts[i]<span class="sc">==</span><span class="st">"greater"</span>) {</span>
+<span id="cb26-48"><a href="#cb26-48"></a>    null_df <span class="ot">&lt;-</span> null_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">reject =</span> t<span class="sc">&gt;=</span>right) <span class="co"># for right tailed</span></span>
+<span id="cb26-49"><a href="#cb26-49"></a>  } <span class="cf">else</span> <span class="cf">if</span>(alts[i]<span class="sc">==</span><span class="st">"less"</span>) {</span>
+<span id="cb26-50"><a href="#cb26-50"></a>    null_df <span class="ot">&lt;-</span> null_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">reject =</span> t<span class="sc">&lt;=</span>left) <span class="co"># for left tailed test</span></span>
+<span id="cb26-51"><a href="#cb26-51"></a>  } <span class="cf">else</span>{</span>
+<span id="cb26-52"><a href="#cb26-52"></a>    null_df <span class="ot">&lt;-</span> null_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">reject =</span> t<span class="sc">&lt;=</span>lower <span class="sc">|</span> t <span class="sc">&gt;=</span> upper) <span class="co"># for two.tailed test</span></span>
+<span id="cb26-53"><a href="#cb26-53"></a>  }</span>
+<span id="cb26-54"><a href="#cb26-54"></a></span>
+<span id="cb26-55"><a href="#cb26-55"></a>  <span class="co"># resampling</span></span>
+<span id="cb26-56"><a href="#cb26-56"></a>  ts<span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">1000</span>)</span>
+<span id="cb26-57"><a href="#cb26-57"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) {</span>
+<span id="cb26-58"><a href="#cb26-58"></a>    samp<span class="ot">&lt;-</span> <span class="fu">sample</span>(x, n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-59"><a href="#cb26-59"></a>    ts[j]<span class="ot">&lt;-</span> (<span class="fu">mean</span>(samp)<span class="sc">-</span>mu0)<span class="sc">/</span>(<span class="fu">sd</span>(samp)<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
+<span id="cb26-60"><a href="#cb26-60"></a>  }</span>
+<span id="cb26-61"><a href="#cb26-61"></a></span>
+<span id="cb26-62"><a href="#cb26-62"></a>  <span class="co"># join to outside tibbles</span></span>
+<span id="cb26-63"><a href="#cb26-63"></a>  null_all<span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(null_all, null_df)</span>
+<span id="cb26-64"><a href="#cb26-64"></a>  resamp_all<span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(resamp_all, <span class="fu">tibble</span>(<span class="at">test =</span> tests[i], <span class="at">t =</span> ts))</span>
+<span id="cb26-65"><a href="#cb26-65"></a>  tstat_all<span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(tstat_all, <span class="fu">tibble</span>(<span class="at">test =</span> tests[i], <span class="at">t_stat =</span> t.stat))</span>
+<span id="cb26-66"><a href="#cb26-66"></a>}</span>
+<span id="cb26-67"><a href="#cb26-67"></a></span>
+<span id="cb26-68"><a href="#cb26-68"></a><span class="co">#plotting</span></span>
+<span id="cb26-69"><a href="#cb26-69"></a><span class="fu">ggplot</span>(null_all, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> density)) <span class="sc">+</span></span>
+<span id="cb26-70"><a href="#cb26-70"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"Null Distribution"</span>)) <span class="sc">+</span> <span class="co"># for null</span></span>
+<span id="cb26-71"><a href="#cb26-71"></a>  <span class="fu">geom_ribbon</span>(</span>
+<span id="cb26-72"><a href="#cb26-72"></a>    <span class="co"># for one-tailed tests</span></span>
+<span id="cb26-73"><a href="#cb26-73"></a>    <span class="at">data =</span> null_all <span class="sc">|&gt;</span> <span class="fu">filter</span>(test<span class="sc">!=</span><span class="st">"Paired Difference"</span>, reject),</span>
+<span id="cb26-74"><a href="#cb26-74"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> density, <span class="at">fill =</span> <span class="st">"Rejection Region"</span>),</span>
+<span id="cb26-75"><a href="#cb26-75"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span></span>
+<span id="cb26-76"><a href="#cb26-76"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-77"><a href="#cb26-77"></a>  <span class="fu">geom_ribbon</span>(</span>
+<span id="cb26-78"><a href="#cb26-78"></a>    <span class="co">#left-side of two.tailed</span></span>
+<span id="cb26-79"><a href="#cb26-79"></a>    <span class="at">data =</span> null_all <span class="sc">|&gt;</span></span>
+<span id="cb26-80"><a href="#cb26-80"></a>      <span class="fu">filter</span>(test<span class="sc">==</span><span class="st">"Paired Difference"</span>, t<span class="sc">&lt;=</span> <span class="fu">qt</span>(<span class="fl">0.025</span>, <span class="at">df =</span> n<span class="dv">-1</span>)),</span>
+<span id="cb26-81"><a href="#cb26-81"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> density, <span class="at">fill =</span> <span class="st">"Rejection Region"</span>),</span>
+<span id="cb26-82"><a href="#cb26-82"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span></span>
+<span id="cb26-83"><a href="#cb26-83"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-84"><a href="#cb26-84"></a>  <span class="fu">geom_ribbon</span>(</span>
+<span id="cb26-85"><a href="#cb26-85"></a>    <span class="co"># right side of two.tailed</span></span>
+<span id="cb26-86"><a href="#cb26-86"></a>    <span class="at">data =</span> null_all <span class="sc">|&gt;</span></span>
+<span id="cb26-87"><a href="#cb26-87"></a>      <span class="fu">filter</span>(test<span class="sc">==</span><span class="st">"Paired Difference"</span>, t<span class="sc">&gt;=</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n<span class="dv">-1</span>)),</span>
+<span id="cb26-88"><a href="#cb26-88"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> density, <span class="at">fill =</span> <span class="st">"Rejection Region"</span>),</span>
+<span id="cb26-89"><a href="#cb26-89"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span></span>
+<span id="cb26-90"><a href="#cb26-90"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-91"><a href="#cb26-91"></a>  <span class="fu">geom_density</span>(</span>
+<span id="cb26-92"><a href="#cb26-92"></a>    <span class="co"># resampling distrib</span></span>
+<span id="cb26-93"><a href="#cb26-93"></a>    <span class="at">data =</span> resamp_all,</span>
+<span id="cb26-94"><a href="#cb26-94"></a>    <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">color =</span> <span class="st">"Resampling Distribution"</span>),</span>
+<span id="cb26-95"><a href="#cb26-95"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb26-96"><a href="#cb26-96"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-97"><a href="#cb26-97"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb26-98"><a href="#cb26-98"></a>    <span class="co"># for t-statistic</span></span>
+<span id="cb26-99"><a href="#cb26-99"></a>    <span class="at">data =</span> tstat_all,</span>
+<span id="cb26-100"><a href="#cb26-100"></a>    <span class="fu">aes</span>(<span class="at">xintercept =</span> t_stat),</span>
+<span id="cb26-101"><a href="#cb26-101"></a>    <span class="at">linetype =</span> <span class="st">"dashed"</span></span>
+<span id="cb26-102"><a href="#cb26-102"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-103"><a href="#cb26-103"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>test, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb26-104"><a href="#cb26-104"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-105"><a href="#cb26-105"></a>    <span class="co">#labels</span></span>
+<span id="cb26-106"><a href="#cb26-106"></a>    <span class="at">x =</span> <span class="st">"T statistic"</span>,</span>
+<span id="cb26-107"><a href="#cb26-107"></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
+<span id="cb26-108"><a href="#cb26-108"></a>    <span class="at">color =</span> <span class="st">""</span>,</span>
+<span id="cb26-109"><a href="#cb26-109"></a>    <span class="at">fill =</span> <span class="st">""</span></span>
+<span id="cb26-110"><a href="#cb26-110"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="fig-part-e" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
