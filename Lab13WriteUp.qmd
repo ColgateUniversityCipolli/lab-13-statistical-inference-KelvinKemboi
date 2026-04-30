@@ -123,6 +123,7 @@ Using the `pwr` package for \texttt{R} [@pwr], conduct a power analysis. How man
 
 Installed and loaded the `pwr` library and used the `pwr.t.test` to find that the number of observations needed (n) would be 21.
 
+
 ```{r}
 #| size: scriptsize
 library(pwr) # load package
@@ -145,6 +146,7 @@ Click the link to go to the paper. Find the source data for Figure 2. Download t
 3. Saved the excel sheet as a csv file in my project's root folder
 4. Used `mutate()` to get a new column for difference
 
+
 ```{r}
 #| size: scriptsize
 fig.dat <- read_csv("fig2_dat.csv")
@@ -164,6 +166,15 @@ Summarize the data.
 * **Optional Challenge** Can you reproduce Figure 2(g)? Note that the you can use \texttt{geom\_errorbar()} to plot the range created by adding the mean $\pm$ one standard deviation.
 
 **Solution:**
+
+Created numerical and graphical summaries for further, closer, and paired differences data.
+
+- The mean for the further condition is negative (−0.213), suggesting that dopamine levels tend to decrease when the birds sing further away from their adult song
+
+- The mean for the closer condition is positive (0.179), indicating that dopamine levels tend to increase when the birds sing closer to their adult song
+
+- The mean for difference is positive (0.391) and larger than for closer, showing that dopamine levels are generally higher when birds sing closer compared to further away
+
 
 ```{r}
 #| size: scriptsize
@@ -256,7 +267,8 @@ p.high <- pt(difference_t.stat, df = n - 1, lower.tail = FALSE)
 
 **Results**
 
-The closer responses were significantly greater than 0
+I verified that the observations are independent and that the distributions don't show very strong skewness or outliers, making the t-procedures appropriate.
+
 ($t=9.157253$, $p<0.0001 (1.33263e-09)$; $g=1.77$; 95% CI: 1.14, 2.39).
 
 The further responses were significantly less than 0
@@ -286,7 +298,6 @@ observed statistics in separate tibbles. I then plotted the null distributions,
 
 ```{r}
 #| label: fig-part-e
-#| echo: false
 #| fig-cap: "Null t-distributions, observed t-statistics, rejection regions, and resampling distributions."
 #| fig-width: 8
 #| fig-height: 5
